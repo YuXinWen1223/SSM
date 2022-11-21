@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mybatis.mapper.StudentMapper">
+
+    <insert id="addStudent">
+        insert into student
+        values (0, #{sname}, #{ssex}, #{address}, #{birthday}, #{cid})
+    </insert>
+    <!--获取添加后的主键-->
+    <insert id="saveStudent" useGeneratedKeys="true" keyProperty="sno">
+        insert into student
+        values (0, #{sname}, #{ssex}, #{address}, #{birthday}, #{cid})
+    </insert>
+    <update id="updateStudent">
+        update student
+        set sname= #{sname},
+            ssex = #{ssex},
+            address= #{address},
+            birthday= #{birthday},
+            cid= #{cid}
+        where sno = #{sno}
+    </update>
+    <delete id="delectStudent">
+        delete
+        from student
+        where sno = #{id}
+    </delete>
+    <select id="getByIdStudent" resultType="Student">
+        select *
+        from student
+        where sno = #{id}
+    </select>
+    <select id="getStudentList" resultType="Student">
+        select *
+        from student
+    </select>
+    <select id="getSnameStudent" resultType="Student">
+        select *
+        from student
+        where sname = #{name}
+    </select>
+    <select id="getSnameStudentCount" resultType="java.lang.Integer">
+        select *
+        from student
+        where sname = #{name}
+    </select>
+    <select id="getgetSnameMap" resultType="java.util.Map">
+        select *
+        from student
+        where sname = #{name}
+    </select>
+    <select id="getgetSnameMapList" resultType="java.util.Map">
+        select *
+        from student
+    </select>
+    <select id="getLikeSnameStudent" resultType="com.ssm.mybatis.entity.Student">
+        <!--select * from student where sname like "%"#{name}"%"-->
+        select *
+        from student
+        where sname like concat('%', #{name}, '%')
+    </select>
+    <select id="tableName" resultType="com.ssm.mybatis.entity.Student">
+        select *
+        from student ${name}
+    </select>
+</mapper>

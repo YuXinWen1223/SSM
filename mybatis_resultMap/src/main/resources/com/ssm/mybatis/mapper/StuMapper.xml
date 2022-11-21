@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mybatis.mapper.StuMapper">
+    <resultMap id="StuResultMap" type="Stu">
+        <id column="stu_id" property="stuId"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="stu_age" property="stuAge"/>
+    </resultMap>
+    <select id="getStuList" resultType="com.ssm.mybatis.entity.Stu">
+        select *
+        from Stu
+    </select>
+    <select id="StuList" resultMap="StuResultMap">
+        select *
+        from Stu
+    </select>
+    <resultMap id="StuAndClazzResultMap" type="Stu">
+        <id column="stu_id" property="stuId"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="stu_age" property="stuAge"/>
+        <result column="cid" property="clazz.cid"/>
+        <result column="clazz_name" property="clazz.clazzName"/>
+    </resultMap>
+    <select id="StuListAndClazz" resultMap="StuAndClazzResultMap">
+        select *
+        from Stu a
+                 left join clazz b on a.cid = b.cid
+    </select>
+    <select id="StuListAndClazzTwo" resultType="StuAndClazz">
+        select *
+        from Stu a
+                 left join clazz b on a.cid = b.cid
+    </select>
+    <resultMap id="StuAndClazzResultMapTwo" type="Stu">
+        <id column="stu_id" property="stuId"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="stu_age" property="stuAge"/>
+        <result column="cid" property="cid"/>
+        <!--
+        association 表示包含关联表数据
+        property=表名，javaType=实体类名
+        column=表列名，property=对应实体类名
+        -->
+        <association property="clazz" javaType="Clazz">
+            <id column="cid" property="cid"></id>
+            <result column="clazz_name" property="clazzName"></result>
+        </association>
+
+    </resultMap>
+    <select id="StuListAndClazzThree" resultMap="StuAndClazzResultMapTwo">
+        select *
+        from Stu a
+                 left join clazz b on a.cid = b.cid
+    </select>
+    <resultMap id="deptEmpStep" type="stu">
+        <id column="stu_id" property="stuId"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="stu_age" property="stuAge"/>
+        <result column="cid" property="cid"/>
+        <!--
+            association 表示包含关联表数据 多对一
+            property=表名，javaType=实体类名
+            column=表列名，property=对应实体类名
+            fetchTyp 表示开启延迟加载环境中通过属性设置按需加载或延迟加载
+            fetchType="lazy(延迟加载)|eager(立即加载)"
+            -->
+        <association property="clazz"
+                     fetchType="eager"
+                     select="com.ssm.mybatis.mapper.ClazzMapper.getClazzList"
+                     column="cid"
+        >
+        </association>
+    </resultMap>
+
+    <select id="StuListAndClazzFour" resultMap="deptEmpStep">
+        select *
+        from Stu a
+                 left join clazz b on a.cid = b.cid
+    </select>
+    <select id="getStuListAndClazzTwo" resultType="com.ssm.mybatis.entity.Stu">
+        select *
+        from Stu
+        where cid = #{cid}
+    </select>
+
+</mapper>

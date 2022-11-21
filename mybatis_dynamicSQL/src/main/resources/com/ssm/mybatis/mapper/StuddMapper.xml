@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mybatis.mapper.StuddMapper">
+    <resultMap id="getStudd" type="Studd">
+        <id column="s_id" property="sId"/>
+        <result column="s_name" property="sName"/>
+        <result column="s_age" property="sAge"/>
+    </resultMap>
+    <!--
+    collection 集合名称
+    item 变量名称
+    separator 分隔符
+    -->
+    <insert id="addBatch">
+        insert into studd values
+        <foreach collection="studd"
+                 item="item"
+                 separator=","
+        >
+            (null,#{item.sName},#{item.sAge})
+        </foreach>
+    </insert>
+    <!--
+    collection 集合名称
+    item 变量名称
+    separator 分隔符
+    open 左边包含
+    close 右边包含
+    -->
+    <delete id="delBatch">
+        delete
+        from studd
+        where s_id in
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </delete>
+    <!--
+        if标签可通过test属性的表达式进行判断，
+        若表达式的结果为true，则标签中的内容会执行；反之标签中的内容不会执行
+        sql片段，可以记录一段公共sql片段，在使用的地方通过include标签进行引入
+    -->
+    <sql id="StuddColumn">
+        s_id,s_name,s_age
+    </sql>
+    <select id="getStudd" resultType="com.ssm.mybatis.entity.Studd">
+        select
+        <include refid="StuddColumn"/>
+        from Studd where 1=1
+        <if test="sName != null and sName != ''">
+            and s_name = #{sName}
+        </if>
+        <if test="sAge != null and sAge !='' ">
+            and s_age = #{sAge}
+        </if>
+    </select>
+    <!--
+        where和if一般结合使用：
+        a>若where标签中的if条件都不满足，则where标签没有任何功能，即不会添加where关键字
+        b>若where标签中的if条件满足，则where标签会自动添加where关键字，并将条件最前方多余的
+        and去掉
+        注意：where标签不能去掉条件最后多余的and
+    -->
+    <select id="getStuddTwo" resultType="com.ssm.mybatis.entity.Studd">
+        select * from Studd
+        <where>
+            <if test="sName != null and sName != ''">
+                and s_name = #{sName}
+            </if>
+            <if test="sAge != null and sAge !='' ">
+                and s_age = #{sAge}
+            </if>
+        </where>
+    </select>
+    <!--
+    prefix：在trim标签中的内容的前面添加某些内容
+    prefixOverrides：在trim标签中的内容的前面去掉某些内容
+    suffix：在trim标签中的内容的后面添加某些内容
+    suffixOverrides：在trim标签中的内容的后面去掉某些内容
+
+    -->
+    <select id="getStuddThree" resultType="com.ssm.mybatis.entity.Studd">
+        select * from Studd
+        <trim prefix="where" suffixOverrides="and">
+            <if test="sName != null and sName != ''">
+                s_name = #{sName} and
+            </if>
+            <if test="sAge != null and sAge !='' ">
+                s_age = #{sAge}
+            </if>
+        </trim>
+    </select>
+    <!--
+    choose、when、 otherwise相当于if...else if..else
+    -->
+    <select id="getStuddFour" resultType="com.ssm.mybatis.entity.Studd">
+        select * from Studd
+        <where>
+            <choose>
+                <when test="sName != null and sName != ''">
+                    and s_name = #{sName}
+                </when>
+                <when test="sAge != null and sAge !='' ">
+                    and s_age = #{sAge}
+                </when>
+            </choose>
+        </where>
+    </select>
+</mapper>

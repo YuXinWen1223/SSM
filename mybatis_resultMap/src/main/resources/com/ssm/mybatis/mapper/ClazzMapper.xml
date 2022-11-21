@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mybatis.mapper.ClazzMapper">
+    <select id="getClazzList" resultType="com.ssm.mybatis.entity.Clazz">
+        select *
+        from clazz
+        where cid = #{cid}
+    </select>
+    <resultMap id="getClass" type="clazz">
+        <id column="cid" property="cid"/>
+        <result column="clazz_name" property="clazzName"/>
+        <!--
+    collection 表示包含关联表数据 一对多
+    property=表名，ofType=实体类名/数据类型
+    column=表列名，property=对应实体类名
+    -->
+        <collection property="stu" ofType="Stu">
+            <id column="stu_id" property="stuId"/>
+            <result column="stu_name" property="stuName"/>
+            <result column="stu_age" property="stuAge"/>
+            <result column="cid" property="cid"/>
+        </collection>
+    </resultMap>
+    <select id="getClazzAndList" resultMap="getClass">
+        select *
+        from clazz a
+                 left join stu b on a.cid = b.cid
+    </select>
+    <resultMap id="getClassList" type="clazz">
+        <id column="cid" property="cid"/>
+        <result column="clazz_name" property="clazzName"/>
+        <!--
+    collection 表示包含关联表数据 一对多
+    property=表名，select=分部查询mapper方法
+    column=条件
+    -->
+        <collection property="stu"
+                    select="com.ssm.mybatis.mapper.StuMapper.getStuListAndClazzTwo"
+                    column="cid">
+
+        </collection>
+    </resultMap>
+    <select id="getClazzAndListTwo" resultMap="getClassList">
+        select *
+        from clazz a
+                 left join stu b on a.cid = b.cid
+    </select>
+</mapper>

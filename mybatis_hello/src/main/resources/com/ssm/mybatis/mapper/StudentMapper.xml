@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mybatis.mapper.StudentMapper">
+
+    <insert id="addStudent">
+        insert into student
+        values (0, #{sname}, #{ssex}, #{address}, #{birthday}, #{cid})
+    </insert>
+    <insert id="saveStudent">
+        insert into student
+        values (0, "哈哈哈", "男", "上海", "28", 1)
+    </insert>
+    <update id="updateStudent">
+        update student
+        set sname= #{sname},
+            ssex = #{ssex},
+            address= #{address},
+            birthday= #{birthday},
+            cid= #{cid}
+        where sno = #{sno}
+    </update>
+    <delete id="delectStudent">
+        delete
+        from student
+        where sno = #{id}
+    </delete>
+    <select id="getByIdStudent" resultType="Student">
+        select *
+        from student
+        where sno = #{id}
+    </select>
+    <select id="getStudentList" resultType="Student">
+        select *
+        from student
+    </select>
+</mapper>
