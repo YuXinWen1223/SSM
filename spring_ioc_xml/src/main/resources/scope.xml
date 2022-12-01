@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- scope属性：取值singleton（表示单例）    -->
+    <!-- scope属性：取值prototype（多例），bean在IOC容器中可以有多个实例-->
+    <bean id="studentOne" class="com.spring.ioc.entity.Student" scope="singleton">
+        <!-- property标签：通过组件类的setXxx()方法给组件对象设置属性
+             name属性：指定属性名（这个属性名是getXxx()、setXxx()方法定义的，和成员变量无关）
+             value属性：指定属性值
+         -->
+        <property name="sid" value="1"/>
+        <property name="email" value="123456@qq.com"/>
+        <property name="name" value="张三"/>
+        <property name="age" value="18"/>
+    </bean>
+</beans>
